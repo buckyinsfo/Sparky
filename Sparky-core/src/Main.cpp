@@ -1,4 +1,5 @@
 #include "graphics/window.h"
+#include "maths/maths.h"
 
 #include <GLFW/glfw3.h>
 
@@ -12,16 +13,25 @@ int main()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
+	
+	sparky::maths::vec4 a(1.0f, 2.0f, 5.0f, 7.0f);
+	sparky::maths::vec4 b(2, 4, 6, 7);
+
+	sparky::maths::vec4 c = a + b;
+
 	while (!window.closed())
 	{
 		//std::cout << window.getWidth() << ", " << window.getHeight() << std::endl;
 		window.clear();
 
+		std::cout << c << std::endl;
+
+		system("pause");
+#if 0
 		double x, y;
 		window.getMousePosition(x, y);
 		std::cout << "Position: x = " << x << ", y = " << y << std::endl;
 
-#if 1
 		if (window.isKeyPressed(GLFW_KEY_A))
 		{
 			std::cout << "Pressed!" << std::endl;
