@@ -6,7 +6,9 @@
 
 int main()
 {
-	sparky::graphics::Window window("Sparky", 960, 540);
+	using namespace sparky;
+
+	graphics::Window window("Sparky", 960, 540);
 	glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
 
 	GLuint vao;
@@ -14,10 +16,13 @@ int main()
 	glBindVertexArray(vao);
 
 	
-	sparky::maths::vec4 a(1.0f, 2.0f, 5.0f, 7.0f);
-	sparky::maths::vec4 b(2, 4, 6, 7);
+	maths::vec4 a(1.0f, 2.0f, 5.0f, 7.0f);
+	maths::vec4 b(2, 4, 6, 7);
 
-	sparky::maths::vec4 c = a + b;
+	maths::vec4 c = a + b;
+
+	maths::mat4 position = maths::mat4::translation(maths::vec3(2, 3, 4));
+
 
 	while (!window.closed())
 	{
@@ -26,7 +31,7 @@ int main()
 
 		std::cout << c << std::endl;
 
-		system("pause");
+		
 #if 0
 		double x, y;
 		window.getMousePosition(x, y);
