@@ -22,14 +22,17 @@ int main()
 	maths::vec4 c = a + b;
 
 	maths::mat4 position = maths::mat4::translation(maths::vec3(2, 3, 4));
+	position *= maths::mat4::identity();
+
+	maths::vec4 column = position.columns[3];
 
 
-	while (!window.closed())
+ 	while (!window.closed())
 	{
 		//std::cout << window.getWidth() << ", " << window.getHeight() << std::endl;
 		window.clear();
 
-		std::cout << c << std::endl;
+		std::cout << column << std::endl;
 
 		
 #if 0
