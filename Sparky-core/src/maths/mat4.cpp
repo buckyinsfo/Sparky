@@ -10,7 +10,7 @@ namespace sparky {
 				elements[i] = 0.0f;
 			}
 		}
-
+		
 		mat4::mat4(float diagonal)
 		{
 			for (int i = 0; i < 4 * 4; i++)

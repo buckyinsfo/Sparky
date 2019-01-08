@@ -7,7 +7,11 @@ namespace sparky {
 
 		struct mat4
 		{
-			float elements[4 * 4];
+			union
+			{
+				float elements[4 * 4];
+				vec4 columns[4];
+			};
 
 			mat4();
 			mat4(float diagonal);
@@ -23,8 +27,6 @@ namespace sparky {
 			static mat4 translation(const vec3& translation);
 			static mat4 rotation(float angle, const vec3& axis);
 			static mat4 scale(const vec3& scale);
-
-
 		};
 	}
 }
