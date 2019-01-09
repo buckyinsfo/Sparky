@@ -3,6 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "utils/fileutils.h"
 
 int main()
 {
@@ -15,6 +16,15 @@ int main()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
+	std::string str = read_file("src\\Main.cpp");
+	std::cout << str << std::endl;
+
+	/*
+	std::string s_cwd(_getcwd(NULL, 0));
+	std::cout << "CWD is: " << s_cwd << std::endl; 
+	*/
+	system("PAUSE");
+	
 	
 	maths::vec4 a(1.0f, 2.0f, 5.0f, 7.0f);
 	maths::vec4 b(2, 4, 6, 7);
