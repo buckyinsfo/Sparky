@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="tests\test.cpp" />
+    <ClCompile Include="tests\maths\vec2_tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="tests">
+      <UniqueIdentifier>{8788762f-6f9d-4eb9-94dd-b890db1b3c01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests\maths">
+      <UniqueIdentifier>{df3789e1-f596-49be-8e2e-f4ebd2efa615}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

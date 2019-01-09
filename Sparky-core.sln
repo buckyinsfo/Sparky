@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparky-core", "Sparky-core\Sparky-core.vcxproj", "{64D0897D-C437-4E2A-92FF-F7B2C74DE83D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sparky-core-test", "Sparky-core-test\Sparky-core-test.vcxproj", "{EC223FBC-31A1-4930-BE52-F5EE475E2F23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{64D0897D-C437-4E2A-92FF-F7B2C74DE83D}.Release|x64.Build.0 = Release|x64
 		{64D0897D-C437-4E2A-92FF-F7B2C74DE83D}.Release|x86.ActiveCfg = Release|Win32
 		{64D0897D-C437-4E2A-92FF-F7B2C74DE83D}.Release|x86.Build.0 = Release|Win32
+		{EC223FBC-31A1-4930-BE52-F5EE475E2F23}.Debug|x64.ActiveCfg = Debug|x64
+		{EC223FBC-31A1-4930-BE52-F5EE475E2F23}.Debug|x64.Build.0 = Debug|x64
+		{EC223FBC-31A1-4930-BE52-F5EE475E2F23}.Debug|x86.ActiveCfg = Debug|Win32
+		{EC223FBC-31A1-4930-BE52-F5EE475E2F23}.Debug|x86.Build.0 = Debug|Win32
+		{EC223FBC-31A1-4930-BE52-F5EE475E2F23}.Release|x64.ActiveCfg = Release|x64
+		{EC223FBC-31A1-4930-BE52-F5EE475E2F23}.Release|x64.Build.0 = Release|x64
+		{EC223FBC-31A1-4930-BE52-F5EE475E2F23}.Release|x86.ActiveCfg = Release|Win32
+		{EC223FBC-31A1-4930-BE52-F5EE475E2F23}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
