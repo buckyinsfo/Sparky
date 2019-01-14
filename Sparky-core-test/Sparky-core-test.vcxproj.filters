@@ -4,6 +4,9 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="tests\test.cpp" />
     <ClCompile Include="tests\maths\vec2_tests.cpp" />
+    <ClCompile Include="tests\utils\fileutils_tests.cpp" />
+    <ClCompile Include="tests\maths\vec4_tests.cpp" />
+    <ClCompile Include="tests\maths\mat4_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -15,5 +18,8 @@
     <Filter Include="tests\maths">
       <UniqueIdentifier>{df3789e1-f596-49be-8e2e-f4ebd2efa615}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

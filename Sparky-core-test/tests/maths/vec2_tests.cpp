@@ -1,11 +1,10 @@
 #include "pch.h"
 
-#include <string>
 
 using namespace sparky;
 using namespace maths;
 
-TEST(vec2, init) {
+TEST(vec2_tests, init) {
 
 	// TODO set up the sparky-core project as a static linked lib instead of an executable.
 	//vec2 a(1.0f, 2.0f);
