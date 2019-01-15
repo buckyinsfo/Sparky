@@ -11,12 +11,42 @@ namespace sparky {
 			std::cout << "The mock package!" << std::endl;
 		}
 
+		bool checkStatus(GLuint objectID, PFNGLGETSHADERIVPROC objPropGetterFunc, PFNGLGETSHADERINFOLOGPROC getInfoLogProc, GLenum statusType)
+		{
+			bool bReturn = true;
+			GLint status;
+			objPropGetterFunc(objectID, statusType, &status);
+			if (status != GL_TRUE)
+			{
+				GLint logLen;
+				objPropGetterFunc(objectID, GL_INFO_LOG_LENGTH, &logLen);
+				GLchar* buffer = new GLchar[logLen];
+				GLsizei bufferSize;
+				getInfoLogProc(objectID, logLen, &bufferSize, buffer);
+
+				const char* str = status == GL_COMPILE_STATUS ? "compile" : "link";
+				std::cout << "CheckStatus object(" << str << ") error: " << buffer << std::endl;
+				delete[] buffer;
+				bReturn = false;
+			}
+			return bReturn;
+		}
+		bool checkShaderStatus(GLuint shaderID)
+		{
+			return checkStatus(shaderID, glGetShaderiv, glGetShaderInfoLog, GL_COMPILE_STATUS);
+		}
+
+		bool checkProgramStatus(GLuint programID)
+		{
+			return checkStatus(programID, glGetProgramiv, glGetProgramInfoLog, GL_LINK_STATUS);
+		}
+
 		void installShaders()
 		{
 			GLuint vertShaderID = glCreateShader(GL_VERTEX_SHADER);
 			GLuint fragShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
-			const char* adapter[1];
+			const GLchar* adapter[1];
 			adapter[0] = vertexShaderCode;
 			glShaderSource(vertShaderID, 1, adapter, 0);
 			adapter[0] = fragmentShaderCode;
@@ -25,10 +55,20 @@ namespace sparky {
 			glCompileShader(vertShaderID);
 			glCompileShader(fragShaderID);
 
+			if (!checkShaderStatus(vertShaderID) || !checkShaderStatus(fragShaderID))
+			{
+				return;
+			}
+
 			GLuint programID = glCreateProgram();
 			glAttachShader(programID, vertShaderID);
 			glAttachShader(programID, fragShaderID);
 			glLinkProgram(programID);
+
+			if (!checkProgramStatus(programID))
+			{
+				return;
+			}
 
 			glUseProgram(programID);
 		}

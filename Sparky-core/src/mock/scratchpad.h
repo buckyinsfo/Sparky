@@ -9,6 +9,7 @@
 #include <direct.h>
 
 #include <iostream>
+#include <string>
 
 namespace sparky {
 	namespace mock {
