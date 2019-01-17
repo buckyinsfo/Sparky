@@ -108,8 +108,5 @@ namespace sparky {
 			stream << "vec2: (" << vector.x << ", " << vector.y << ")";
 			return stream;
 		}
-
-
-
 	}
 }

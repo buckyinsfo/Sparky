@@ -42,6 +42,9 @@
     <ClCompile Include="src\mock\shaderCode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\mock\verticesSamples.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\Window.h">
@@ -73,7 +76,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\basic.frag" />
-    <None Include="src\shaders\basic.vert" />
+    <None Include="src\shaders\basic.vert.glsl" />
+    <None Include="src\shaders\basic.frag.glsl" />
+    <None Include="src\shaders\mock.vert.glsl" />
+    <None Include="src\shaders\mock.frag.glsl" />
   </ItemGroup>
 </Project>
