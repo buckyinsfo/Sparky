@@ -3,6 +3,7 @@
 #include "../graphics/window.h"
 #include "../graphics/shader.h"
 #include "../maths/maths.h"
+#include "../utils/fileutils.h"
 
 #include <GLFW/glfw3.h>
 

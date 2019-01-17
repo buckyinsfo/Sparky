@@ -92,6 +92,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -117,6 +118,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;user32.lib;gdi32.lib;shell32.lib</AdditionalDependencies>
+      <OutputFile>$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,6 +145,7 @@
     <ClCompile Include="src\maths\vec4.cpp" />
     <ClCompile Include="src\mock\scratchpad.cpp" />
     <ClCompile Include="src\mock\shaderCode.cpp" />
+    <ClCompile Include="src\mock\verticesSamples.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\shader.h" />
@@ -156,8 +159,10 @@
     <ClInclude Include="src\utils\fileutils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\basic.frag" />
-    <None Include="src\shaders\basic.vert" />
+    <None Include="src\shaders\basic.frag.glsl" />
+    <None Include="src\shaders\basic.vert.glsl" />
+    <None Include="src\shaders\mock.frag.glsl" />
+    <None Include="src\shaders\mock.vert.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
