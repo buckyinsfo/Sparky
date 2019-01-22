@@ -53,7 +53,6 @@ namespace sparky {
 			{
 				m_mouseButtons[i] = false;
 			}
-
 		}
 
 		Window::~Window()
