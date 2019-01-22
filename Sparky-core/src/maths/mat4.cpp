@@ -86,24 +86,24 @@ namespace sparky {
 			result.elements[0 + 0 * 4] = a;
 			result.elements[1 + 1 * 4] = q;
 			result.elements[2 + 2 * 4] = b;
-			result.elements[3 + 2 * 4] = -1.0f;
-			result.elements[2 + 3 * 4] = c;
+			result.elements[2 + 3 * 4] = -1.0f;
+			result.elements[3 + 2 * 4] = c;
 			
 			return result;
 		}
 
-		mat4 mat4::translation(const vec3& translation)
+		mat4 mat4::translate(const vec3& translation)
 		{
 			mat4 result(1.0f);
 
-			result.elements[0 + 3 * 4] = translation.x;
-			result.elements[1 + 3 * 4] = translation.y;
-			result.elements[2 + 3 * 4] = translation.z;
+			result.elements[3 + 0 * 4] = translation.x;
+			result.elements[3 + 1 * 4] = translation.y;
+			result.elements[3 + 2 * 4] = translation.z;
 
 			return result;
 		}
 
-		static mat4 rotation(float angle, const vec3& axis)
+		mat4 mat4::rotate(float angle, const vec3& axis)
 		{
 			mat4 result(1.0f); 
 			
@@ -116,22 +116,22 @@ namespace sparky {
 			float y = axis.y;
 			float z = axis.z;
 
-			result.elements[0 + 0 * 4] = x * omc + c;
-			result.elements[1 + 0 * 4] = y * x * omc + z * s;
-			result.elements[2 + 0 * 4] = x * z * omc - y * s;
+			result.elements[0 + 0 * 4] = x * x * omc + c;
+			result.elements[0 + 1 * 4] = y * x * omc + z * s;
+			result.elements[0 + 2 * 4] = x * z * omc - y * s;
 
-			result.elements[0 + 1 * 4] = x * y * omc - z * s;
-			result.elements[1 + 1 * 4] = y * omc + c;
-			result.elements[2 + 1 * 4] = y * z * omc + x * s;
+			result.elements[1 + 0 * 4] = x * y * omc - z * s;
+			result.elements[1 + 1 * 4] = y * y * omc + c;
+			result.elements[1 + 2 * 4] = y * z * omc + x * s;
 
-			result.elements[0 + 2 * 4] = x * z * omc + y * s;
-			result.elements[1 + 2 * 4] = y * z * omc - x * s;
-			result.elements[2 + 2 * 4] = z * omc + c;
+			result.elements[2 + 0 * 4] = x * z * omc + y * s;
+			result.elements[2 + 1 * 4] = y * z * omc - x * s;
+			result.elements[2 + 2 * 4] = z * z * omc + c;
 
 			return result;
 		}
 
-		static mat4 scale(const vec3& scale)
+		mat4 mat4::scale(const vec3& scale)
 		{
 			mat4 result(1.0f);
 
@@ -140,6 +140,16 @@ namespace sparky {
 			result.elements[2 + 2 * 4] = scale.z;
 
 			return result;
+		}
+
+		std::string mat4::toString() const
+		{
+			std::stringstream result;
+			/*result << "mat4: (" << rows[0].x << ", " << rows[1].x << ", " << rows[2].x << ", " << rows[3].x << "), ";
+			result << "(" << rows[0].y << ", " << rows[1].y << ", " << rows[2].y << ", " << rows[3].y << "), ";
+			result << "(" << rows[0].z << ", " << rows[1].z << ", " << rows[2].z << ", " << rows[3].z << "), ";
+			result << "(" << rows[0].w << ", " << rows[1].w << ", " << rows[2].w << ", " << rows[3].w << ")";*/
+			return result.str();
 		}
 	}
 }

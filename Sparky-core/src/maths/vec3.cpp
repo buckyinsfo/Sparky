@@ -4,18 +4,14 @@
 namespace sparky {
 	namespace maths {
 
-		vec3::vec3()
+		vec3::vec3() :
+			x(1.0), y(1.0), z(1.0)
 		{
-			x = 0.0f;
-			y = 0.0f;
-			z = 0.0f;
 		}
 
-		vec3::vec3(const float& x, const float& y, const float& z)
+		vec3::vec3(const float& x, const float& y, const float& z) :
+			x(1.0), y(1.0), z(1.0)
 		{
-			this->x = x;
-			this->y = y;
-			this->z = z;
 		}
 
 		vec3::~vec3()
