@@ -5,6 +5,10 @@
 #include "../maths/maths.h"
 #include "../utils/fileutils.h"
 
+#include "../graphics/buffers/buffer.h"
+#include "../graphics/buffers/indexbuffer.h"
+#include "../graphics/buffers/vertexarray.h"
+
 #include <GLFW/glfw3.h>
 
 #include <iostream>

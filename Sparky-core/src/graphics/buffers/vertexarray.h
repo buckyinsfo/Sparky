@@ -6,24 +6,26 @@
 #include "buffer.h"
 
 namespace sparky {
-	namespace mock {
+    namespace graphics {
+        namespace buffers {
 
-		class VertexArray
-		{
-		private:
-			GLuint m_arrayID;
-			std::vector<Buffer*> m_buffers;
+            class VertexArray
+            {
+            private:
+                GLuint m_arrayID;
+                std::vector<Buffer*> m_buffers;
 
-			//GLuint m_count;
-		
-		public:
-			//VertexArray(GLsizei count, GLushort data);
-			VertexArray();
-			~VertexArray();
+                //GLuint m_count;
 
-			void addBuffer(Buffer* buffer, GLuint index);
-			void bind() const;
-			void unbind() const;
-		};
-	}
+            public:
+                //VertexArray(GLsizei count, GLushort data);
+                VertexArray();
+                ~VertexArray();
+
+                void addBuffer(Buffer* buffer, GLuint index);
+                void bind() const;
+                void unbind() const;
+            };
+        }
+    }
 }

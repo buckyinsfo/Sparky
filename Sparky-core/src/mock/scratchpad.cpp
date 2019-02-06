@@ -223,7 +223,6 @@ namespace sparky {
 				0, 3, 0,
 				8, 3, 0,
 				8, 0, 0,
-
 			};
 			
 			GLuint vboID;
@@ -371,14 +370,96 @@ namespace sparky {
 			return 0; 
 		}
 
+        int createGLWindowWithBuffers()
+        {
+            graphics::Window window("Sparky", 960, 540);
+            //glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+
+            GLfloat vertices[] =
+            {
+                0, 0, 0,
+                0, 3, 0,
+                8, 3, 0,
+                8, 0, 0
+            };
+
+            GLushort indices[] =
+            {
+                0, 1, 2,
+                2, 3, 0
+            };
+
+            GLfloat colorsA[] =
+            {
+                1, 0, 1, 1,
+                1, 0, 1, 1,
+                1, 0, 1, 1,
+                1, 0, 1, 1
+            };
+
+            GLfloat colorsB[] =
+            {
+                0.2f, 0.3f, 0.8f, 1,
+                0.2f, 0.3f, 0.8f, 1,
+                0.2f, 0.3f, 0.8f, 1,
+                0.2f, 0.3f, 0.8f, 1
+            };
+
+            graphics::buffers::VertexArray sprite1, sprite2;
+            graphics::buffers::IndexBuffer ibo(6, indices);
+
+            sprite1.addBuffer(new graphics::buffers::Buffer(4 * 3, vertices, 3), 0);
+            sprite1.addBuffer(new graphics::buffers::Buffer(4 * 4, colorsA, 4), 1);
+
+            sprite2.addBuffer(new graphics::buffers::Buffer(4 * 3, vertices, 3), 0);
+            sprite2.addBuffer(new graphics::buffers::Buffer(4 * 4, colorsB, 4), 1);
+            maths::mat4 ortho = maths::mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+
+            graphics::Shader shader("src/shaders/basic1.vert.glsl", "src/shaders/basic1.frag.glsl");
+            shader.enable();
+
+            shader.setUniformMat4("pr_matrix", ortho);
+            shader.setUniformMat4("ml_matrix", maths::mat4::translate(maths::vec3(4, 3, 0)));
+            
+            shader.setUniform2f("light_pos", maths::vec2(4.0f, 1.5f));
+            shader.setUniform4f("colour", maths::vec4(0.2f, 0.3f, 0.8f, 1.0f));
+
+            while (!window.closed())
+            {
+                window.clear();
+                double x, y;
+                window.getMousePosition(x, y);
+                shader.setUniform2f("light_pos", maths::vec2((float)(x * 16.0f / 960.0f), (float)(9.0f - y * 9.0f / 540.0f)));
+                
+                sprite1.bind();
+                ibo.bind();
+                shader.setUniformMat4("ml_matrix", maths::mat4::translate(maths::vec3(4, 3, 0)));
+                glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_SHORT, 0);
+                ibo.bind();
+                sprite1.unbind();
+
+                sprite2.bind();
+                ibo.bind();
+                shader.setUniformMat4("ml_matrix", maths::mat4::translate(maths::vec3(0, 0, 0)));
+                glDrawElements(GL_TRIANGLES, ibo.getCount(), GL_UNSIGNED_SHORT, 0);
+                ibo.bind();
+                sprite2.unbind();
+                
+                window.update();
+            }
+            return 0;
+        }
+
 		int createGLWindow()
 		{
 			glewInit();
 			//glEnable(GL_DEPTH_TEST);
 			//return createGLWindow0();		// Working 2 triangles w/ color and indicies.
-			return createGLWindow1();		// Working version at end of Episode 6.
+			//return createGLWindow1();		// Working version at end of Episode 6.
 			//return createGLWindow2();		// Working version with depth.
 			//return createGLWindow3();		// Non-working version with animate triangle.
+
+            return createGLWindowWithBuffers(); // Working version at end of Episode 7.
 		}
 	}
 }

@@ -3,22 +3,24 @@
 #include <GL/glew.h>
 
 namespace sparky {
-	namespace mock {
+    namespace graphics {
+        namespace buffers {
 
-		class IndexBuffer
-		{
-		private:
-			GLuint m_bufferID;
-			GLuint m_count;
-		
-		public:
-			IndexBuffer(GLsizei count, GLushort data);
+            class IndexBuffer
+            {
+            private:
+                GLuint m_bufferID;
+                GLuint m_count;
 
-			void bind() const;
-			void unbind() const;
+            public:
+                IndexBuffer(GLsizei count, GLushort* data);
 
-			inline GLuint getCount() const { return m_count; }
+                void bind() const;
+                void unbind() const;
 
-		};
-	}
+                inline GLuint getCount() const { return m_count; }
+
+            };
+        }
+    }
 }
