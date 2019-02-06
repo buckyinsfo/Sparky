@@ -8,8 +8,12 @@
 #include "vec4.h"
 #include "mat4.h"
 
+namespace sparky {
+    namespace maths {
 
-inline float toRadians(float degrees)
-{
-	return 2.0f * degrees * ((float)M_PI / 360.0f);
+        inline float toRadians(float degrees)
+        {
+            return 2.0f * degrees * ((float)M_PI / 360.0f);
+        }
+    }
 }

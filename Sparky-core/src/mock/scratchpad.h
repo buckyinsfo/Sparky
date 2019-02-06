@@ -7,8 +7,6 @@
 
 #include <GLFW/glfw3.h>
 
-//#include <direct.h>
-
 #include <iostream>
 #include <string>
 

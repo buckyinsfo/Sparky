@@ -10,6 +10,10 @@ out vec4 pos;
 
 void main()
 {
-	pos = vec4(position, 1.0);
+	pos = vec4(position, 1.0) * ml_matrix;
 	gl_Position = pr_matrix * vw_matrix * ml_matrix * pos;
+
+	//pos = ml_matrix * position;
+
+
 }

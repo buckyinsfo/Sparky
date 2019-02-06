@@ -5,13 +5,15 @@ namespace sparky {
 	namespace maths {
 
 		vec3::vec3() :
-			x(1.0), y(1.0), z(1.0)
+			x(0.0), y(0.0), z(0.0)
 		{
 		}
 
-		vec3::vec3(const float& x, const float& y, const float& z) :
-			x(1.0), y(1.0), z(1.0)
-		{
+		vec3::vec3(const float& x, const float& y, const float& z)
+        {
+            this->x = x;
+            this->y = y;
+            this->z = z;
 		}
 
 		vec3::~vec3()
@@ -24,7 +26,6 @@ namespace sparky {
 			x += other.x;
 			y += other.y;
 			z += other.z;
-
 
 			return *this;
 		}
