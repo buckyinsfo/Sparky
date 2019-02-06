@@ -5,7 +5,12 @@ namespace sparky {
 
 		extern const char* vertexShaderCode;
 		extern const char* fragmentShaderCode;
-		
+
+		const unsigned int MAX_TRIS = 20;
+		const unsigned int VERTS_PER_TRI = 3;
+		const unsigned int FLOATS_PER_VERT = 6;
+		const unsigned int STRIDE = VERTS_PER_TRI * FLOATS_PER_VERT * sizeof(float);
+				
 		void message()
 		{
 			std::cout << "The mock package!" << std::endl;
@@ -71,6 +76,73 @@ namespace sparky {
 			}
 
 			glUseProgram(programID);
+		}
+
+		void createOpenGLBuffer()
+		{
+			GLuint vboID;
+			glGenBuffers(1, &vboID);
+			glBindBuffer(GL_ARRAY_BUFFER, vboID);
+			glBufferData(GL_ARRAY_BUFFER, MAX_TRIS * STRIDE, NULL, GL_STATIC_DRAW);
+
+			// Vertex
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+			
+			// Color
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
+		}
+
+		int sendTriangleToScreen(int count)
+		{
+			if (count >= MAX_TRIS)
+				return count;
+			
+			const GLfloat X_DELTA = 0.1f;
+			const GLfloat X_NEW = -1 + count + X_DELTA;
+			
+			GLfloat theTri[] = {
+				X_NEW, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f,
+						 
+				X_NEW + X_DELTA, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f,
+						 
+				X_NEW, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f,
+			};
+			glBufferSubData(GL_ARRAY_BUFFER, MAX_TRIS * STRIDE, STRIDE, theTri);
+
+			return ++count;
+		}
+
+        int createGLWindow3()
+		{
+			graphics::Window window("Sparky", 960, 540);
+			glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+
+			// Must be called after window is created.
+			glEnable(GL_DEPTH_TEST);
+
+
+			createOpenGLBuffer();
+
+			int count = 0;
+			while (!window.closed())
+			{
+				window.clear();
+				
+				count = sendTriangleToScreen(count);
+
+				//glClear(GL_DEPTH_BUFFER_BIT);
+				
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+				
+
+				window.update();
+			}
+			return 0;
 		}
 
 		int createGLWindow2()
@@ -141,7 +213,7 @@ namespace sparky {
 		int createGLWindow1()
 		{
 			graphics::Window window("Sparky", 960, 540);
-			glClearColor(0.2, 0.3f, 0.8f, 1.0f);
+			//glClearColor(0.2, 0.3f, 0.8f, 1.0f);
 
 			GLfloat verticies[] =
 			{
@@ -152,28 +224,6 @@ namespace sparky {
 				8, 3, 0,
 				8, 0, 0,
 
-				/*4, 3, 0,
-				12, 3, 0,
-				4, 6, 0,
-				4, 6, 0,
-				12, 6, 0,
-				12, 3, 0,*/
-
-				/*0, 0, 0,
-				12, 0, 0,
-				0, 12, 0,
-				12, 0, 0,
-				12, 12, 0,
-				0, 12, 0,
-*/
-
-
-				/*-0.5f, -0.5f, +0.0f,
-				-0.5f, +0.5f, +0.0f,
-				+0.5f, +0.5f, +0.0f,
-				+0.5f, +0.5f, +0.0f,
-				+0.5f, -0.5f, +0.0f,
-				-0.5f, -0.5f, +0.0f,*/
 			};
 			
 			GLuint vboID;
@@ -187,11 +237,11 @@ namespace sparky {
 					
 			maths::mat4 ortho = maths::mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
 			
-			graphics::Shader shader("src/shaders/basic.vert.glsl", "src/shaders/basic.frag.glsl");
+			graphics::Shader shader("src/shaders/basic1.vert.glsl", "src/shaders/basic1.frag.glsl");
 			shader.enable();
 			
 			shader.setUniformMat4("pr_matrix", ortho);
-			shader.setUniformMat4("ml_matrix", maths::mat4::translate(maths::vec3(-4, -4, 0)));
+			shader.setUniformMat4("ml_matrix", maths::mat4::translate(maths::vec3(4, 3, 0)));
 			//shader.setUniformMat4("ml_matrix", maths::mat4::rotate(45.0f, maths::vec3(0, 0, 1)));
 
 			shader.setUniform2f("light_pos", maths::vec2(4.0f, 1.5f));
@@ -200,11 +250,11 @@ namespace sparky {
 			while (!window.closed())
 			{
 				window.clear();
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-				glDrawArrays(GL_TRIANGLES, 0, 6);
-				//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-				
-				window.update();
+                double x, y;
+                window.getMousePosition(x, y);
+                shader.setUniform2f("light_pos", maths::vec2((float)(x * 16.0f / 960.0f), (float)(9.0f - y * 9.0f / 540.0f)));
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+                window.update();
 			}
 			return 0;
 		}
@@ -324,10 +374,11 @@ namespace sparky {
 		int createGLWindow()
 		{
 			glewInit();
-			glEnable(GL_DEPTH_TEST);
+			//glEnable(GL_DEPTH_TEST);
 			//return createGLWindow0();		// Working 2 triangles w/ color and indicies.
 			return createGLWindow1();		// Working version at end of Episode 6.
 			//return createGLWindow2();		// Working version with depth.
+			//return createGLWindow3();		// Non-working version with animate triangle.
 		}
 	}
 }
