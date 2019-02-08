@@ -4,23 +4,21 @@
 
 namespace sparky {
     namespace graphics {
-        namespace buffers {
 
-            class IndexBuffer
-            {
-            private:
-                GLuint m_bufferID;
-                GLuint m_count;
+        class IndexBuffer
+        {
+        private:
+            GLuint m_bufferID;
+            GLuint m_count;
 
-            public:
-                IndexBuffer(GLsizei count, GLushort* data);
+        public:
+            IndexBuffer(GLushort* data, GLsizei count);
 
-                void bind() const;
-                void unbind() const;
+            void bind() const;
+            void unbind() const;
 
-                inline GLuint getCount() const { return m_count; }
+            inline GLuint getCount() const { return m_count; }
 
-            };
-        }
+        };
     }
 }
