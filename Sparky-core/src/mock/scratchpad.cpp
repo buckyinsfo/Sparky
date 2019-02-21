@@ -1,5 +1,7 @@
 #include "scratchpad.h"
 
+#include <time.h>
+
 namespace sparky {
 	namespace mock {
 
@@ -117,7 +119,8 @@ namespace sparky {
 
             return ++count;
 		}
-
+  
+#define USE_BATCH 1
         int createGLWindow5()
         {
             graphics::Window window("Sparky!", 960, 540);
@@ -127,15 +130,34 @@ namespace sparky {
             graphics::Shader shader("src/shaders/basic1.vert.glsl", "src/shaders/basic1.frag.glsl");
             shader.enable();
             shader.setUniformMat4("pr_matrix", ortho);
-            //shader.setUniformMat4("ml_matrix", maths::mat4::translate(maths::vec3(4, 3, 0)));
+            
+            std::vector<graphics::Renderable2D*> sprites;
 
-            //graphics::Sprite sprite0(5, 5, 4, 4, maths::vec4(1, 0, 1, 1));
-            //graphics::Sprite sprite1(7, 1, 2, 3, maths::vec4(0.2f, 0, 1, 1));
+            srand(time(0));
 
-            graphics::StaticSprite sprite0(5, 5, 4, 4, maths::vec4(1, 0, 1, 1), shader);
-            graphics::StaticSprite sprite1(7, 1, 2, 3, maths::vec4(0.2f, 0, 1, 1), shader);
+            for (float y = 0.0f; y < 9.0f; y += 0.05f)
+            {
+                for (float x = 0.0f; x < 16.0f; x += 0.05f)
+                {
+                    sprites.push_back(new
+#if USE_BATCH
+                    graphics::Sprite
+#else
+                    graphics::StaticSprite
+#endif
+                    (x, y, 0.4, 0.4f, maths::vec4(rand() % 1000 / 1000.0f, 0, 1, 1)
+#if !USE_BATCH
+                    , shader
+#endif
+                    ));
+                }
+            }
 
+ #if USE_BATCH
             graphics::BatchRenderer2D renderer;
+ #else
+            graphics::SimpleRenderer2D renderer;
+ #endif
 
             while (!window.closed())
             {
@@ -145,12 +167,20 @@ namespace sparky {
                 window.getMousePosition(x, y);
                 shader.setUniform2f("light_pos", maths::vec2((float)(x * 16.0f / 960.0f), (float)(9.0f - y * 9.0f / 540.0f)));
 
+#if USE_BATCH
                 renderer.begin();
-                renderer.submit(&sprite0);
-                renderer.submit(&sprite1);
+#endif
+                for (int i = 0; i < sprites.size(); i++)
+                {
+                    renderer.submit(sprites[i]);
+                }
+#if USE_BATCH
                 renderer.end();
-                
+#endif
+
+                utils::glCheckError();
                 renderer.flush();
+                utils::glCheckError();
 
                 window.update();
             }
@@ -176,7 +206,6 @@ namespace sparky {
             graphics::Renderable2D sprite1(maths::vec3(7, 1, 0), maths::vec2(2, 3), maths::vec4(0.2f, 0, 1, 1), shader);
             */
 
-#define USE_BATCH 0
 #if USE_BATCH
             graphics::Sprite sprite0(5, 5, 4, 4, maths::vec4(1, 0, 1, 1));
             graphics::Sprite sprite1(7, 1, 2, 3, maths::vec4(0.2f, 0, 1, 1));
@@ -483,8 +512,8 @@ namespace sparky {
 			//return createGLWindow1();		// Sparky at end of Episode 6.
 			//return createGLWindow2();		// JK list Ep. 20 depth buffer.
 			//return createGLWindow3();		// JK list Ep. 23 & 24 animate triangle.
-            return createGLWindow4();     // Sparky Ep. 7 refactor to Ep. 9. move some Renderable2d into SimpleRenderer2D.
-            //return createGLWindow5();     // Sparky Ep. 8. Render single sprite.
+            //return createGLWindow4();     // Sparky Ep. 7 refactor to Ep. 9. move some Renderable2d into SimpleRenderer2D.
+            return createGLWindow5();     // Sparky Ep. 9. Stress test Renders.
 		}
 	}
 }
