@@ -14,10 +14,7 @@ namespace sparky {
             GLuint m_arrayID;
             std::vector<Buffer*> m_buffers;
 
-            //GLuint m_count;
-
         public:
-            //VertexArray(GLsizei count, GLushort data);
             VertexArray();
             ~VertexArray();
 

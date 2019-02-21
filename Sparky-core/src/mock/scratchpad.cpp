@@ -3,7 +3,7 @@
 namespace sparky {
 	namespace mock {
 
-		extern const char* vertexShaderCode;
+        extern const char* vertexShaderCode;
 		extern const char* fragmentShaderCode;
 
 		const unsigned int MAX_TRIS = 20;
@@ -36,7 +36,8 @@ namespace sparky {
 			}
 			return bReturn;
 		}
-		bool checkShaderStatus(GLuint shaderID)
+		
+        bool checkShaderStatus(GLuint shaderID)
 		{
 			return checkStatus(shaderID, glGetShaderiv, glGetShaderInfoLog, GL_COMPILE_STATUS);
 		}
@@ -87,11 +88,11 @@ namespace sparky {
 
 			// Vertex
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, 0);
 			
 			// Color
 			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (char*)(sizeof(float) * 3));
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (char*)(sizeof(GLfloat) * 3));
 		}
 
 		int sendTriangleToScreen(int count)
@@ -100,31 +101,126 @@ namespace sparky {
 				return count;
 			
 			const GLfloat X_DELTA = 0.1f;
-			const GLfloat X_NEW = -1 + count + X_DELTA;
+			const GLfloat X_NEW = -1 + count * X_DELTA;
 			
 			GLfloat theTri[] = {
-				X_NEW, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f,
+				X_NEW, 1.0f, 0.0f,
+				1.0f, 0.0f, 1.0f,
 						 
-				X_NEW + X_DELTA, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f,
+				X_NEW + X_DELTA, 1.0f, 0.0f,
+				1.0f, 0.0f, 1.0f,
 						 
 				X_NEW, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f,
+				1.0f, 0.0f, 1.0f,
 			};
-			glBufferSubData(GL_ARRAY_BUFFER, MAX_TRIS * STRIDE, STRIDE, theTri);
+			glBufferSubData(GL_ARRAY_BUFFER, count * STRIDE, STRIDE, theTri);
 
-			return ++count;
+            return ++count;
 		}
+
+        int createGLWindow5()
+        {
+            graphics::Window window("Sparky!", 960, 540);
+            // glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+            maths::mat4 ortho = maths::mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+            graphics::Shader shader("src/shaders/basic1.vert.glsl", "src/shaders/basic1.frag.glsl");
+            shader.enable();
+            shader.setUniformMat4("pr_matrix", ortho);
+            //shader.setUniformMat4("ml_matrix", maths::mat4::translate(maths::vec3(4, 3, 0)));
+
+            //graphics::Sprite sprite0(5, 5, 4, 4, maths::vec4(1, 0, 1, 1));
+            //graphics::Sprite sprite1(7, 1, 2, 3, maths::vec4(0.2f, 0, 1, 1));
+
+            graphics::StaticSprite sprite0(5, 5, 4, 4, maths::vec4(1, 0, 1, 1), shader);
+            graphics::StaticSprite sprite1(7, 1, 2, 3, maths::vec4(0.2f, 0, 1, 1), shader);
+
+            graphics::BatchRenderer2D renderer;
+
+            while (!window.closed())
+            {
+                window.clear();
+
+                double x, y;
+                window.getMousePosition(x, y);
+                shader.setUniform2f("light_pos", maths::vec2((float)(x * 16.0f / 960.0f), (float)(9.0f - y * 9.0f / 540.0f)));
+
+                renderer.begin();
+                renderer.submit(&sprite0);
+                renderer.submit(&sprite1);
+                renderer.end();
+                
+                renderer.flush();
+
+                window.update();
+            }
+            return 0;
+        }
+
+        int createGLWindow4()
+        {
+            graphics::Window window("Sparky", 960, 540);
+            //glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+
+            maths::mat4 ortho = maths::mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
+
+            graphics::Shader shader("src/shaders/basic1.vert.glsl", "src/shaders/basic1.frag.glsl");
+            shader.enable();
+            shader.setUniformMat4("pr_matrix", ortho);
+            
+            shader.setUniform2f("light_pos", maths::vec2(4.0f, 1.5f));
+            shader.setUniform4f("colour", maths::vec4(0.2f, 0.3f, 0.8f, 1.0f));
+
+            /*  Refactor from Ep. 8 to Ep. 9
+            graphics::Renderable2D sprite0(maths::vec3(5, 5, 0), maths::vec2(4, 4), maths::vec4(1, 0, 1, 1), shader);
+            graphics::Renderable2D sprite1(maths::vec3(7, 1, 0), maths::vec2(2, 3), maths::vec4(0.2f, 0, 1, 1), shader);
+            */
+
+#define USE_BATCH 0
+#if USE_BATCH
+            graphics::Sprite sprite0(5, 5, 4, 4, maths::vec4(1, 0, 1, 1));
+            graphics::Sprite sprite1(7, 1, 2, 3, maths::vec4(0.2f, 0, 1, 1));
+            graphics::BatchRenderer2D renderer;
+#else            
+            graphics::StaticSprite sprite0(5, 5, 4, 4, maths::vec4(1, 0, 1, 1), shader);
+            graphics::StaticSprite sprite1(7, 1, 2, 3, maths::vec4(0.2f, 0, 1, 1), shader);
+            graphics::SimpleRenderer2D renderer;
+#endif
+          
+            utils::glCheckError();
+
+            while (!window.closed())
+            {
+                window.clear();
+
+                double x, y;
+                window.getMousePosition(x, y);
+                shader.setUniform2f("light_pos", maths::vec2((float)(x * 16.0f / 960.0f), (float)(9.0f - y * 9.0f / 540.0f)));
+
+#if USE_BATCH
+                renderer.begin();
+#endif
+                renderer.submit(&sprite0);
+                renderer.submit(&sprite1);
+#if USE_BATCH
+                renderer.end();
+#endif
+                renderer.flush();
+
+                utils::glCheckError();
+
+                window.update();
+            }
+            return 0;
+        }
 
         int createGLWindow3()
 		{
 			graphics::Window window("Sparky", 960, 540);
-			glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+			//glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
 
 			// Must be called after window is created.
-			glEnable(GL_DEPTH_TEST);
-
+			//glEnable(GL_DEPTH_TEST);
 
 			createOpenGLBuffer();
 
@@ -132,12 +228,20 @@ namespace sparky {
 			while (!window.closed())
 			{
 				window.clear();
-				
-				count = sendTriangleToScreen(count);
 
-				//glClear(GL_DEPTH_BUFFER_BIT);
+                if (count >= MAX_TRIS)
+                    count = 0;
 				
-				glDrawArrays(GL_TRIANGLES, 0, 3);
+                if (window.isMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+                {
+                    std::cout << "Left Mouse Pressed!" << std::endl;
+                    count = sendTriangleToScreen(count);
+                }
+
+				glClear(GL_DEPTH_BUFFER_BIT);
+                glClear(GL_COLOR_BUFFER_BIT);
+				
+				glDrawArrays(GL_TRIANGLES, (count - 1) * 3, count * 3);
 				
 
 				window.update();
@@ -253,6 +357,7 @@ namespace sparky {
                 window.getMousePosition(x, y);
                 shader.setUniform2f("light_pos", maths::vec2((float)(x * 16.0f / 960.0f), (float)(9.0f - y * 9.0f / 540.0f)));
                 glDrawArrays(GL_TRIANGLES, 0, 6);
+
                 window.update();
 			}
 			return 0;
@@ -370,54 +475,16 @@ namespace sparky {
 			return 0; 
 		}
 
-        int createGLWindowWithBuffers()
-        {
-            graphics::Window window("Sparky", 960, 540);
-            //glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
-
-            maths::mat4 ortho = maths::mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
-
-            graphics::Shader shader("src/shaders/basic1.vert.glsl", "src/shaders/basic1.frag.glsl");
-            shader.enable();
-
-            shader.setUniformMat4("pr_matrix", ortho);
-            shader.setUniformMat4("ml_matrix", maths::mat4::translate(maths::vec3(4, 3, 0)));
-            
-            shader.setUniform2f("light_pos", maths::vec2(4.0f, 1.5f));
-            shader.setUniform4f("colour", maths::vec4(0.2f, 0.3f, 0.8f, 1.0f));
-            
-            graphics::Renderable2D sprite0(maths::vec3(5, 5, 0), maths::vec2(4, 4), maths::vec4(1, 0, 1, 1), shader);
-            graphics::Renderable2D sprite1(maths::vec3(7, 1, 0), maths::vec2(2, 3), maths::vec4(0.2f, 0, 1, 1), shader);
-            
-            graphics::Simple2DRenderer renderer;
-
-            while (!window.closed())
-            {
-                window.clear();
-                
-                double x, y;
-                window.getMousePosition(x, y);
-                shader.setUniform2f("light_pos", maths::vec2((float)(x * 16.0f / 960.0f), (float)(9.0f - y * 9.0f / 540.0f)));
-                
-                renderer.submit(&sprite0);
-                renderer.submit(&sprite1);
-                renderer.flush();
-
-                window.update();
-            }
-            return 0;
-        }
-
 		int createGLWindow()
 		{
 			glewInit();
 			//glEnable(GL_DEPTH_TEST);
-			//return createGLWindow0();		// Working 2 triangles w/ color and indicies.
-			//return createGLWindow1();		// Working version at end of Episode 6.
-			//return createGLWindow2();		// Working version with depth.
-			//return createGLWindow3();		// Non-working version with animate triangle.
-
-            return createGLWindowWithBuffers(); // Working version at end of Episode 7.
+			//return createGLWindow0();		// Two triangles w/ color and indices.
+			//return createGLWindow1();		// Sparky at end of Episode 6.
+			//return createGLWindow2();		// JK list Ep. 20 depth buffer.
+			//return createGLWindow3();		// JK list Ep. 23 & 24 animate triangle.
+            return createGLWindow4();     // Sparky Ep. 7 refactor to Ep. 9. move some Renderable2d into SimpleRenderer2D.
+            //return createGLWindow5();     // Sparky Ep. 8. Render single sprite.
 		}
 	}
 }

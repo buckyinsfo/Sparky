@@ -12,7 +12,9 @@ namespace sparky {
             GLuint m_count;
 
         public:
+            IndexBuffer(GLuint* data, GLsizei count);
             IndexBuffer(GLushort* data, GLsizei count);
+            ~IndexBuffer();
 
             void bind() const;
             void unbind() const;
