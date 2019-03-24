@@ -36,9 +36,23 @@ namespace sparky {
 			std::ifstream in(filepath, std::ios::in | std::ios::binary);
 			if (in)
 			{
-				return(std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>()));
+				return(std::string((std::istreambuf_iterator<char>(in)),
+                       std::istreambuf_iterator<char>()));
 			}
-			throw(errno);
+            throw(errno);
 		}
+
+        static void print_full_path(const char * partialPath)
+        {
+            char full[_MAX_PATH];
+            if (_fullpath(full, partialPath, _MAX_PATH) != NULL)
+            {
+                std::cout << "Full path is: " << full << std::endl;
+            }
+            else
+            {
+                std::cout << "Invalid path" << std::endl;
+            }
+        }
 	};
 }
