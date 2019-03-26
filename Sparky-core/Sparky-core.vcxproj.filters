@@ -133,5 +133,6 @@
     <None Include="src\shaders\mock.frag.glsl" />
     <None Include="src\shaders\basic1.vert.glsl" />
     <None Include="src\shaders\basic1.frag.glsl" />
+    <None Include="src\utils\timer.h" />
   </ItemGroup>
 </Project>

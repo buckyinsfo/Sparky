@@ -123,17 +123,19 @@ namespace sparky {
 #define USE_BATCH 1
         int createGLWindow5()
         {
+            FileUtils::print_full_path(".\\");
+            
             graphics::Window window("Sparky!", 960, 540);
             // glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
             maths::mat4 ortho = maths::mat4::orthographic(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f);
-            graphics::Shader shader("src/shaders/basic1.vert.glsl", "src/shaders/basic1.frag.glsl");
+            graphics::Shader shader("..\\..\\Sparky-core/src/shaders/basic1.vert.glsl", "..\\..\\Sparky-core/src/shaders/basic1.frag.glsl");
             shader.enable();
             shader.setUniformMat4("pr_matrix", ortho);
             
             std::vector<graphics::Renderable2D*> sprites;
 
-            srand(time(0));
+            srand((unsigned int)time(0));
 
             for (float y = 0.0f; y < 9.0f; y += 0.05f)
             {
@@ -159,8 +161,18 @@ namespace sparky {
             graphics::SimpleRenderer2D renderer;
  #endif
 
+            Timer time;
+            float timer = 0.0f;
+            unsigned int frames = 0;
+
             while (!window.closed())
             {
+                maths::mat4 mat = maths::mat4::translate(maths::vec3(5, 5, 5));
+                mat = mat * maths::mat4::rotate(time.elapsed() * 50.0f, maths::vec3(0, 0, 1));
+                mat = mat * maths::mat4::translate(maths::vec3(-5, -5, -5));
+                //maths::mat4 mat = maths::mat4::rotate(time.elapsed() * 50.0f, maths::vec3(0, 0, 3));
+                shader.setUniformMat4("ml_matrix", mat);
+
                 window.clear();
 
                 double x, y;
@@ -170,7 +182,7 @@ namespace sparky {
 #if USE_BATCH
                 renderer.begin();
 #endif
-                for (int i = 0; i < sprites.size(); i++)
+                for (unsigned int i = 0; i < sprites.size(); i++)
                 {
                     renderer.submit(sprites[i]);
                 }
@@ -178,11 +190,15 @@ namespace sparky {
                 renderer.end();
 #endif
 
-                utils::glCheckError();
                 renderer.flush();
-                utils::glCheckError();
-
                 window.update();
+                frames++;
+                if (time.elapsed() - timer > 1.0f)
+                {
+                    timer += 1.0f;
+                    printf("%d fps\n", frames);
+                    frames = 0;
+                }
             }
             return 0;
         }
@@ -216,7 +232,7 @@ namespace sparky {
             graphics::SimpleRenderer2D renderer;
 #endif
           
-            utils::glCheckError();
+            glCheckError();
 
             while (!window.closed())
             {
@@ -236,7 +252,7 @@ namespace sparky {
 #endif
                 renderer.flush();
 
-                utils::glCheckError();
+                glCheckError();
 
                 window.update();
             }
@@ -514,6 +530,6 @@ namespace sparky {
 			//return createGLWindow3();		// JK list Ep. 23 & 24 animate triangle.
             //return createGLWindow4();     // Sparky Ep. 7 refactor to Ep. 9. move some Renderable2d into SimpleRenderer2D.
             return createGLWindow5();     // Sparky Ep. 9. Stress test Renders.
-		}
+        }
 	}
 }

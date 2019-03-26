@@ -5,6 +5,7 @@
 #include "../maths/maths.h"
 #include "../utils/fileutils.h"
 #include "../utils/checkErrorGL.h"
+#include "../utils/timer.h"
 
 #include "../graphics/buffers/buffer.h"
 #include "../graphics/buffers/indexbuffer.h"
